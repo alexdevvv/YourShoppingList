@@ -2,11 +2,11 @@ package com.example.yourshoppinglist.domain
 
 interface ShopListRepository {
 
-    fun getShopItem(): ShopItem
+    fun editShopItem(shopItem: ShopItem)
 
     fun deleteShopItem(shopItemId: ShopItem)
 
-    fun editShopItem(shopItem: ShopItem)
+    fun addShopItem(shopItem: ShopItem)
 
     fun getShopItemById(shopItemId: Int): ShopItem
 
