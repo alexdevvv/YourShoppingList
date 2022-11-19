@@ -2,7 +2,9 @@ package com.example.yourshoppinglist.presentation.recycler_view
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yourshoppinglist.R
 import com.example.yourshoppinglist.domain.ShopItem
@@ -11,10 +13,17 @@ class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
 
     private var countViewHolder = 0
 
+    var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
+    var onShopItemClickListener: OnShopItemClickListener? = null
+
+
     var listShopItem = listOf<ShopItem>()
         set(value) {
+            val callback = ShopListDiffCallback(field, value)
+            val diffResult = DiffUtil.calculateDiff(callback)
+            diffResult.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
+
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
@@ -35,9 +44,17 @@ class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
         val shopItem = listShopItem[position]
-
         holder.name.text = "${shopItem.name}"
         holder.count.text = shopItem.count.toString()
+
+        holder.itemView.setOnLongClickListener {
+            onShopItemLongClickListener?.invoke(shopItem)
+            true
+        }
+
+        holder.itemView.setOnClickListener{
+            onShopItemClickListener?.onClick(shopItem)
+        }
 
     }
 
@@ -53,6 +70,14 @@ class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
     override fun getItemCount(): Int {
         return listShopItem.size
 
+    }
+
+    interface OnShopItemLongClickListener{
+        fun onLongClick(shopItem: ShopItem)
+    }
+
+    interface OnShopItemClickListener{
+        fun onClick(shopItem: ShopItem)
     }
 
     companion object {
