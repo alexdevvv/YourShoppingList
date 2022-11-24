@@ -1,8 +1,6 @@
 package com.example.yourshoppinglist.presentation.recycler_view
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -10,8 +8,6 @@ import com.example.yourshoppinglist.R
 import com.example.yourshoppinglist.domain.ShopItem
 
 class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
-
-    private var countViewHolder = 0
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: OnShopItemClickListener? = null
@@ -27,8 +23,7 @@ class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
-        Log.e("OO_CREATE_VIEW_HOLDER", "${++countViewHolder}")
-        val layoutShopItem = when(viewType){
+        val layoutShopItem = when (viewType) {
             ENABLED_STATE -> R.layout.item_enabled
             DISABLED_STATE -> R.layout.item_disabled
             else -> throw Exception("Unknown view type $viewType")
@@ -52,7 +47,7 @@ class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
             true
         }
 
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
             onShopItemClickListener?.onClick(shopItem)
         }
 
@@ -72,11 +67,11 @@ class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
 
     }
 
-    interface OnShopItemLongClickListener{
+    interface OnShopItemLongClickListener {
         fun onLongClick(shopItem: ShopItem)
     }
 
-    interface OnShopItemClickListener{
+    interface OnShopItemClickListener {
         fun onClick(shopItem: ShopItem)
     }
 

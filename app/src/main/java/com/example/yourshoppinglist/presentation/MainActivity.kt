@@ -1,7 +1,6 @@
 package com.example.yourshoppinglist.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -9,16 +8,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.yourshoppinglist.R
 import com.example.yourshoppinglist.domain.ShopItem
 import com.example.yourshoppinglist.presentation.recycler_view.ShopItemAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var vm: MainViewModel
     private lateinit var rv: RecyclerView
     private lateinit var shopItemAdapter: ShopItemAdapter
+    private lateinit var shopItemBt: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initShopItemButton()
         vm = ViewModelProvider(this)[MainViewModel::class.java]
         setupRecyclerView()
         observeViewModel()
@@ -28,6 +30,14 @@ class MainActivity : AppCompatActivity() {
     private fun observeViewModel() {
         vm.shopList.observe(this) {
             shopItemAdapter.listShopItem = it
+        }
+    }
+
+    private fun initShopItemButton(){
+        shopItemBt = findViewById(R.id.floating_action_button)
+        shopItemBt.setOnClickListener{
+            val intent = ShopItemActivity.addNewShopItem(this)
+            startActivity(intent)
         }
     }
 
@@ -72,7 +82,11 @@ class MainActivity : AppCompatActivity() {
     private fun setupOnClick() {
         shopItemAdapter.onShopItemClickListener = object : ShopItemAdapter.OnShopItemClickListener {
             override fun onClick(shopItem: ShopItem) {
-                Log.e("ShopItem", shopItem.name)
+                val name = shopItem.name
+                val count = shopItem.count
+                val id = shopItem.id
+                val intent =  ShopItemActivity.editShopItem(applicationContext, name, count, id)
+                startActivity(intent)
             }
 
         }
@@ -80,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupOnLongClick() {
         shopItemAdapter.onShopItemLongClickListener = {
-            vm.editShopItem(it)
+            vm.editEnableShopItem(it)
         }
     }
 
