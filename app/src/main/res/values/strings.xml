@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">YourShoppingList</string>
+    <string name="count">Count</string>
+    <string name="name">Name</string>
+    <string name="save">save</string>
+    <string name="error_name">Error data name</string>
+    <string name="error_count">Error data count</string>
 </resources>
