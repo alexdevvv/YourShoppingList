@@ -6,12 +6,14 @@ import androidx.lifecycle.ViewModel
 import com.example.yourshoppinglist.data.ShopListRepositoryImpl
 import com.example.yourshoppinglist.domain.AddShopItemUseCase
 import com.example.yourshoppinglist.domain.EditShopItemUseCase
+import com.example.yourshoppinglist.domain.GetShopItemByIdUseCase
 import com.example.yourshoppinglist.domain.ShopItem
 
 class ShopItemViewModel : ViewModel() {
     private val repository = ShopListRepositoryImpl
     private val editShopItemUseCase = EditShopItemUseCase(repository)
     private val addShopItemUseCase = AddShopItemUseCase(repository)
+    private val getShopItemByIdUseCase = GetShopItemByIdUseCase(repository)
 
     private val _editShopItemLD = MutableLiveData<Boolean>()
     val editShopItemLd: LiveData<Boolean>
@@ -20,6 +22,10 @@ class ShopItemViewModel : ViewModel() {
     private val _addShopItemLD = MutableLiveData<Boolean>()
     val addShopItemLD: LiveData<Boolean>
     get() = _addShopItemLD
+
+    private val _getShopItemByIdLD = MutableLiveData<ShopItem>()
+    val getShopItemByIdLD: LiveData<ShopItem>
+    get() = _getShopItemByIdLD
 
     private val _nameErrorLD = MutableLiveData<Boolean>()
     val nameErrorLD: LiveData<Boolean>
@@ -30,7 +36,7 @@ class ShopItemViewModel : ViewModel() {
         get() = _countErrorLD
 
 
-    fun editShopItem(name: String?, count: String?, id: Int) {
+    fun editShopItem(name: String?, count: String?, id: Int, enabled: Boolean) {
         if (checkNullForUserInput(name, count)) {
             val shopItemName = validateNameInput(name!!)
             val shopItemCount = validateCountInput(count!!)
@@ -54,6 +60,11 @@ class ShopItemViewModel : ViewModel() {
             }
 
         }
+    }
+
+    fun getShopItemById(shopItemId: Int){
+        val shopItem = getShopItemByIdUseCase.getShopItemById(shopItemId)
+        _getShopItemByIdLD.value = shopItem
     }
 
 
@@ -92,8 +103,5 @@ class ShopItemViewModel : ViewModel() {
     fun resetCountError(){
         _countErrorLD.value = false
     }
-
-
-
 
 }

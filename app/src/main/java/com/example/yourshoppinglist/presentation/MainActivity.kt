@@ -1,6 +1,7 @@
 package com.example.yourshoppinglist.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -33,11 +34,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initShopItemButton(){
+    private fun initShopItemButton() {
         shopItemBt = findViewById(R.id.floating_action_button)
-        shopItemBt.setOnClickListener{
+        shopItemBt.setOnClickListener {
             val intent = ShopItemActivity.addNewShopItem(this)
             startActivity(intent)
+
         }
     }
 
@@ -72,7 +74,6 @@ class MainActivity : AppCompatActivity() {
                 val shopItem = shopItemAdapter.listShopItem[viewHolder.adapterPosition]
                 vm.deleteShopItem(shopItem)
             }
-
         }
 
         val itemTouchHelper = ItemTouchHelper(myCallback)
@@ -82,10 +83,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupOnClick() {
         shopItemAdapter.onShopItemClickListener = object : ShopItemAdapter.OnShopItemClickListener {
             override fun onClick(shopItem: ShopItem) {
-                val name = shopItem.name
-                val count = shopItem.count
                 val id = shopItem.id
-                val intent =  ShopItemActivity.editShopItem(applicationContext, name, count, id)
+                val intent = ShopItemActivity.editShopItem(applicationContext, id)
                 startActivity(intent)
             }
 
