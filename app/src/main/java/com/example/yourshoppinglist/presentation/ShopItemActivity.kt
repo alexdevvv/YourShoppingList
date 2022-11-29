@@ -13,10 +13,12 @@ class ShopItemActivity : AppCompatActivity() {
     var screenMode: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("ShopItemActivity", "onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
         launchRightScreen()
+
     }
 
     private fun parseIntent() {
@@ -43,10 +45,9 @@ class ShopItemActivity : AppCompatActivity() {
         }
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.shop_item_container, fragment)
+            .replace(R.id.shop_item_container, fragment)
             .commit()
     }
-
 
     companion object {
         const val STATE_SHOP_ITEM = "state_shop_item"

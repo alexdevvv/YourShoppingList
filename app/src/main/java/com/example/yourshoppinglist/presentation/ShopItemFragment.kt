@@ -1,5 +1,6 @@
 package com.example.yourshoppinglist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -23,7 +24,6 @@ class ShopItemFragment : Fragment() {
     private lateinit var shopItemCountEt: TextInputEditText
     private lateinit var vm: ShopItemViewModel
 
-
     private var screenMode: String = MODE_UNKNOVN
     private var shopItemId: Int = UNDEFINED_ID
 
@@ -32,7 +32,6 @@ class ShopItemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_shop_item, container, false)
     }
 

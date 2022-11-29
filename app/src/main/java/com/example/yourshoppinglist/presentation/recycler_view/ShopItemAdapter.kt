@@ -38,7 +38,7 @@ class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
         val shopItem = listShopItem[position]
-        holder.name.text = "${shopItem.name}"
+        holder.name.text = shopItem.name
         holder.count.text = shopItem.count.toString()
 
         holder.itemView.setOnLongClickListener {
