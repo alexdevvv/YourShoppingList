@@ -2,6 +2,7 @@ package com.example.yourshoppinglist.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -16,16 +17,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rv: RecyclerView
     private lateinit var shopItemAdapter: ShopItemAdapter
     private lateinit var shopItemBt: FloatingActionButton
+    private var containerHorizontal: FragmentContainerView? = null
+//    private  var shopItemFragment = ShopItemFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initShopItemButton()
+        containerHorizontal = findViewById(R.id.horizontal_container)
+        initAddShopItemButton()
         vm = ViewModelProvider(this)[MainViewModel::class.java]
         setupRecyclerView()
         observeViewModel()
 
     }
+
+    private fun isHorizontalLaunchState(): Boolean =
+        containerHorizontal != null
 
     private fun observeViewModel() {
         vm.shopList.observe(this) {
@@ -33,11 +40,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initShopItemButton(){
+    private fun initAddShopItemButton() {
         shopItemBt = findViewById(R.id.floating_action_button)
-        shopItemBt.setOnClickListener{
-            val intent = ShopItemActivity.addNewShopItem(this)
-            startActivity(intent)
+        shopItemBt.setOnClickListener {
+            if (!isHorizontalLaunchState()){
+                val intent = ShopItemActivity.addNewShopItem(this)
+                startActivity(intent)
+            }else{
+                fragmentTransactionHorizontal(ShopItemFragment.newInstanceAddModeFragment())
+            }
         }
     }
 
@@ -72,7 +83,6 @@ class MainActivity : AppCompatActivity() {
                 val shopItem = shopItemAdapter.listShopItem[viewHolder.adapterPosition]
                 vm.deleteShopItem(shopItem)
             }
-
         }
 
         val itemTouchHelper = ItemTouchHelper(myCallback)
@@ -82,14 +92,23 @@ class MainActivity : AppCompatActivity() {
     private fun setupOnClick() {
         shopItemAdapter.onShopItemClickListener = object : ShopItemAdapter.OnShopItemClickListener {
             override fun onClick(shopItem: ShopItem) {
-                val name = shopItem.name
-                val count = shopItem.count
                 val id = shopItem.id
-                val intent =  ShopItemActivity.editShopItem(applicationContext, name, count, id)
-                startActivity(intent)
+                if (!isHorizontalLaunchState()) {
+                    val intent = ShopItemActivity.editShopItem(applicationContext, id)
+                    startActivity(intent)
+                }else{
+                    fragmentTransactionHorizontal(ShopItemFragment.newInstanceEditModeFragment(id))
+                }
             }
-
         }
+    }
+
+    private fun fragmentTransactionHorizontal(fragment: ShopItemFragment){
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.horizontal_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupOnLongClick() {

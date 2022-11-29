@@ -12,7 +12,6 @@ class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: OnShopItemClickListener? = null
 
-
     var listShopItem = listOf<ShopItem>()
         set(value) {
             val callback = ShopListDiffCallback(field, value)
@@ -39,7 +38,7 @@ class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
         val shopItem = listShopItem[position]
-        holder.name.text = "${shopItem.name}"
+        holder.name.text = shopItem.name
         holder.count.text = shopItem.count.toString()
 
         holder.itemView.setOnLongClickListener {
@@ -65,10 +64,6 @@ class ShopItemAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
     override fun getItemCount(): Int {
         return listShopItem.size
 
-    }
-
-    interface OnShopItemLongClickListener {
-        fun onLongClick(shopItem: ShopItem)
     }
 
     interface OnShopItemClickListener {
